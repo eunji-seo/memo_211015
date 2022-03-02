@@ -9,11 +9,12 @@
 		
 		<div class="d-flex justify-content-between my-3"> 
 		 	
-			<input type="file" id="file" accept=".jpg,.png,.gif,.jpeg"> <!-- 편의성을 위해 그림만 보여지기위해 만듬 -->
 		<%-- 이미지가 있을떄만 이미지 추가  --%>
 		<c:if test="${not empty post.imagePath}">
-				<img src="${post.imagePath}" alt="업로드 이미지" width="300"/>
+				<img src="${post.imagePath}" alt="업로드 이미지" width="150" class="mr-2"/>
 		</c:if>
+			<input type="file" id="file" accept=".jpg,.png,.gif,.jpeg"> <!-- 편의성을 위해 그림만 보여지기위해 만듬 -->
+		
 		</div>
 		<div class="d-flex justify-content-between">
 			<button type="button" id="postDeleteBtn" class="btn btn-secondary">삭제</button>
