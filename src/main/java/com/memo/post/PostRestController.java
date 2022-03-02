@@ -1,7 +1,6 @@
 package com.memo.post;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,13 +8,13 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.memo.post.bo.PostBO;
-import com.memo.post.model.Post;
 @RequestMapping("/post")
 @RestController
 public class PostRestController {
@@ -25,7 +24,14 @@ public class PostRestController {
 	
 	// 테스트용 컨트롤러
 	
-	
+	/**
+	 * 
+	 * @param subject
+	 * @param content
+	 * @param file
+	 * @param request
+	 * @return
+	 */
 	@PostMapping("/create")
 	public Map<String, Object> create(
 			@RequestParam("subject") String subject,
@@ -53,4 +59,36 @@ public class PostRestController {
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @param postId
+	 * @param subject
+	 * @param content
+	 * @param file
+	 * @param request
+	 * @return
+	 */
+	@PutMapping("/update")
+	public Map<String, Object> update(
+			@RequestParam("postId") int postId,
+			@RequestParam("subject") String subject,
+			@RequestParam(value="content", required=false) String content,
+			@RequestParam(value="file", required=false) MultipartFile file,
+			HttpServletRequest request
+			){
+		
+		HttpSession session = request.getSession();
+		String userLoginId = (String) session.getAttribute("userLoginId"); // 파일이 넘어왔으면 
+		int userId = (int) session.getAttribute("userId"); // 로그인을 검증해야 하기 때문에 
+		
+		Map<String,Object> result = new HashMap<>();
+		result.put("result", "success");
+		
+		int row = postBO.updatePost(postId, userLoginId, userId, subject, content, file);
+		if(row < 1) {
+			result.put("result", "error");
+			result.put("errorMassage", "메모 수정에 실패했습니다.");
+		}
+		return result;
+	}
 }
