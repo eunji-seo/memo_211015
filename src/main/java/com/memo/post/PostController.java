@@ -48,6 +48,7 @@ public class PostController {
 		
 		// postId 에 해당하는 글을 가져옴 
 		Post post = postBO.getPostById(postId);
+		
 		model.addAttribute("post", post);
 		model.addAttribute("viewName", "post/post_detail");
 		return"template/layout";
