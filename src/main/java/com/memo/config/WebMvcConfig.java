@@ -16,7 +16,7 @@ public class WebMvcConfig implements WebMvcConfigurer{
 		.addResourceHandler("/images/**") // http://localhost/images/toma1019_16456453342/sun.png
 		// /D:\서은지_211015\6_spring-project\memo\images
 		///Users/seoeunji/git/memo-211015/images/
-		.addResourceLocations("file:////D:\\서은지_211015\\6_spring-project\\memo\\images/"); // 실제 파일 저장 위치
+		.addResourceLocations("file:////Users/seoeunji/Library/Containers/com.linearity.vn/Data/Documents/6.spring_project/memo/images/"); // 실제 파일 저장 위치
 		
 	}
 	
