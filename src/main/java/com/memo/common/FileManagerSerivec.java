@@ -46,26 +46,19 @@ public class FileManagerSerivec {
 		return null;
 	}
 	
-	public void deleteFile(String imagePath) {
+	public void deleteFile(String imagePath) throws IOException { // BO로 try catch 문 처리 
 		// imagePath의 /images/toma1019_16456453342/sun.png 에서 /images/ 를 제거한 path를 실제 저장경로 뒤에 붙인다.
 		//D:\\서은지_211015\\6_spring-project\\memo\\images/      /images/toma1019_16456453342/sun.png
 		
 		Path path = Paths.get(FILE_UPLOAD_PATH + imagePath.replace("/images/", ""));
 		if(Files.exists(path)) { // 이미지 파일이 있으면 삭제
-			try {
-				Files.delete(path);
-			} catch (IOException e) {
-				e.printStackTrace(); // logging으로 처리 하면 좋음 
-			}
+			Files.delete(path);
 		}
 		// 디렉토리(폴더) 삭제 // sun.png 부모 
 		path = path.getParent(); 
 		if(Files.exists(path)) {
-			try {
-				Files.delete(path);
-			} catch (IOException e) {
-				e.printStackTrace(); // logging으로 처리 하면 좋음 
-			}
+			Files.delete(path);
+		
 		}
 	}
 }
