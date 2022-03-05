@@ -30,10 +30,18 @@
 			</tbody>
 		</table>
 		<div> 
-			
-			<div class="indicate float-right">
-					<a href="/post/post_create_view" class="btn btn-primary">글쓰기</a>
-			</div>
+		<%-- 페이징 --%>	
+		<div class="d-flex justify-content-around mt-5 mb-5">
+			<c:if test="${prevId != 0}">
+				<a href="/post/post_list_view?prevId=${prevId}">&lt;&lt; 이전</a>
+			</c:if>
+			<c:if test="${nextId != 0}">
+				<a href="/post/post_list_view?nextId=${nextId}">다음 &gt;&gt;</a>
+			</c:if>
+		</div>
+		<div class="indicate float-right">
+				<a href="/post/post_create_view" class="btn btn-primary">글쓰기</a>
+		</div>
 		</div>
 	</div>
 </div>

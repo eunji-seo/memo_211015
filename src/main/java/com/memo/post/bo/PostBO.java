@@ -1,6 +1,7 @@
 package com.memo.post.bo;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -24,8 +25,43 @@ public class PostBO {
 	@Autowired
 	private FileManagerSerivec fileManager;
 	
-	public List<Post> getPostListByUserId(int userId){
-		return postDAO.SelectPostList(userId);
+	private static final int POST_MAX_SIZE = 3;
+	
+	public List<Post> getPostListByUserId(int userId, Integer prevId, Integer nextId){
+		// 10 9 8 | 7 6 5 | 4 3 2 | 1
+		
+		// 예를 들어 7 6 5 페이지에서
+		// 1) 다음 눌렀을 때 : nextId-5 => 5보다 작은 3개 => 4 3 2 DESC
+		// 2) 이전 눌렀을 때 : prevId-7 => 7보다 큰 3개 => 8 9 10 ASC => 코드에서 데이터를 reverse 10 9 8 이 나오게 함 
+		// 3) 첫 페이지로 들어왔을때 10 9 8 DESC
+		
+		String direction = null;
+		Integer standardId = null;
+		
+		if(nextId != null) { // 다음 클릭
+			direction = "next";
+			standardId = nextId;
+			
+			return postDAO.SelectPostListByUserId(userId, direction, standardId, POST_MAX_SIZE);
+		} else if (prevId != null) { // 2) 이전 클릭
+			direction = "prev";
+			standardId = prevId;
+			
+			List<Post> postList =  postDAO.SelectPostListByUserId(userId, direction, standardId, POST_MAX_SIZE);
+			// 7보다 큰 3개 8 9 10이 나오므로 list를 reverse 정렬 시킨다.
+			Collections.reverse(postList); // 변경해서 저장까지 해준다 
+			return postList;
+		}
+		// 3) 첫 페이지 
+		return postDAO.SelectPostListByUserId(userId, direction, standardId, POST_MAX_SIZE);
+	}
+	
+	public boolean isLastPage(int userId, int nextId) { // ASC limit1 최소
+		return nextId == postDAO.selectPostIdByUserIdAndSort(userId, "ASC");
+	}
+	
+	public boolean isFirstPage(int userId, int prevId) { // DESC limit1 최대 
+		return prevId == postDAO.selectPostIdByUserIdAndSort(userId, "DESC");
 	}
 	
 	public Post getPostById(int id) {
